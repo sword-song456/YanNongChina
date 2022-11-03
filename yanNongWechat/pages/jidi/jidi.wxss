@@ -1,0 +1,20 @@
+
+.item{
+  height: auto;
+  width: 100%;
+  padding: 20rpx 0;
+  margin: 15rpx auto;
+  position: relative;
+  /* 阴影装饰 */
+  box-shadow:0rpx 0rpx 15rpx -3rpx #666;
+}
+
+.jidiImg{
+  height: 400rpx;
+  width: 100%;
+  border-radius: 20rpx;
+}
+
+.textbox{
+  margin: 10rpx;
+}

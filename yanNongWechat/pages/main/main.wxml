@@ -1,0 +1,73 @@
+<view style="background-color: #ffffff;">
+
+  <swiper autoplay indicator-dots indicator-active-color="green" interval="3000" circular>
+    <swiper-item wx:for="{{swiperUrls}}" wx:key="index">
+      <image src="https://zzjava.top/{{item}}" mode="aspectFill"/>
+    </swiper-item>
+
+  </swiper>
+
+  <!-- 小图标功能 -->
+  <view style="display: flex; text-align: center;margin: 40rpx;">
+    <navigator url="/pages/yanxuekecheng/yanxuekecheng?name=课程">
+      <image src="../../icon/yanxue.png"></image>
+      <text>课程</text>
+    </navigator>
+    <navigator url="/pages/jidi/jidi?name=基地">
+      <image src="../../icon/yingdi.png"></image>
+      <text>基地</text>
+    </navigator>
+    
+    <navigator url="/pages/xueyuan/xueyuan?name=学员">
+      <image src="../../icon/xueyuan.png"></image>
+      <text>学员</text>
+    </navigator>
+    <navigator url="/pages/huigu/huigu?name=回顾">
+      <image src="../../icon/jingcaihuigu.png"></image>
+      <text>回顾</text>
+    </navigator>
+  </view>
+  <view style="display: flex; text-align: center;margin: 40rpx;">
+    <navigator url="/pages/shangpin/shangpin">
+      <image src="../../icon/shangcheng.png"></image>
+      <text>商品</text>
+    </navigator>
+    
+    <navigator url="/pages/youhui/youhui?name=优惠">
+      <image src="../../icon/youhui.png"></image>
+      <text>优惠</text>
+    </navigator>
+    <navigator url="/pages/AI/AI?name=AI">
+      <image src="../../icon/ai.png"></image>
+      <text>AI</text>
+    </navigator>
+    <navigator url="/pages/VR/VR?name=VR">
+      <image src="../../icon/vr.png"></image>
+      <text>VR</text>
+    </navigator>
+  </view>
+
+
+  <!-- 足不出户vr农业研学 视觉识别ai农业研学体验（两个横幅） -->
+
+  <!-- 课程 基地 vr ai 学员 回顾 足迹 优惠  -->
+
+<view style="margin: 20rpx;">
+    <navigator url="/pages/VR/VR?name=AI">
+    <image src="../../ad/ai.png" style="width: 100%;height: 170rpx;border-radius: 30rpx;"></image>
+  </navigator>
+</view>
+
+<view style="margin: 20rpx;">
+    <navigator url="/pages/AI/AI?name=VR">
+    <image src="../../ad/vr.png" style="width: 100%;height: 170rpx;border-radius: 30rpx;"></image>
+  </navigator>
+</view>
+
+
+<view>
+  <image src="https://zzjava.top/upload/xiangce/e54d0629-d13c-4697-80ec-ae153426378e.jpg" mode="widthFix" style="width: 100%;"></image>
+</view>
+
+
+</view>

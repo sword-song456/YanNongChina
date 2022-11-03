@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="js/vue.js"></script>
+    <script src="js/axios-0.18.0.js"></script>
+    <script src="element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="icon" href="./configImage/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+    <meta charset="UTF-8">
+    <meta name="description" content="研农中国是由童引未来打造的一款农业资源整合、发布、推广的平台...">
+    <meta name="keywords" content="研农中国，农业研学，文化旅游，青少年，乡村振兴，夏令营，旅游，儿童旅游，亲子">
+    <title>研农中国—农业文旅助力乡村振兴</title>
+    <style>
+        .showimg{
+            height: 200px;
+            width: 80%;
+            margin: 10px 30px;
+            text-align: center;
+        }
+        p{
+            margin-block-start: 1em;
+            margin-block-end: 1em;
+            margin-inline-start: 0px;
+            margin-inline-end: 0px;
+            line-height: 2;
+            text-indent: 2em;
+            font-size: 18px;
+        }
+        el-col p{
+            line-height: 1;
+            font-size: 15px;
+        }
+
+
+        .el-carousel__item h3 {
+            color: #475669;
+            font-size: 14px;
+            opacity: 0.75;
+            line-height: 200px;
+            margin: 0;
+        }
+        .el-menu-demo{
+            text-align: center;
+
+        }
+        el-menu-item>a{
+            display: inline-block;
+            margin: 60px;
+        }
+
+        .botm p{
+            line-height: 1.3;
+            width: 80%;
+            text-indent: 0;
+        }
+        .bg-purple {
+            background: #d3dce6;
+        }
+        .grid-content {
+            border-radius: 4px;
+            min-height: 36px;
+        }
+        .grid-content{
+            padding: 15px;
+            border: 5px solid;
+            background-color:#ffffff;
+            border-radius: 20px;
+
+        }
+        .preview{
+            background-color: white;
+            margin: 40px 0;
+            border-radius: 20px;
+            padding: 15px;
+            border: 0;
+        }
+        .preview h2{
+            display: inline;
+            width: auto;
+        }
+        .previewBox{
+            display: inline-grid;
+            padding: 5px;
+            box-sizing: border-box;
+            height: 250px;
+            width: 20%;
+        }
+        .previewBox img{
+            width: 100%;
+            height: 200px;
+        }
+    </style>
+</head>
+<body style="width: 1519.200px;height: auto">
+<div id="app">
+<!--网页icon-->
+    <span id="icon" style="display: flex">
+<!--        放置icon-->
+        <img src="configImage/icon.png" style="height: 150px;display: flow;background:none">
+<!--        搜索栏-->
+        <span>
+            <div style="margin-top: 50px;margin-left:50px;text-align: center">
+                <el-input v-model="input" style="width: 250px"></el-input>
+                <el-button type="danger" style="background-color: #ff0000">搜索</el-button>
+            </div>
+        </span>
+    </span>
+<!--顶部菜单-->
+    <el-menu class="el-menu-demo" mode="horizontal" background-color="#FF0000" default-active="1"
+        text-color="#ffffff" active-text-color="#ffffff" style="display:flex;">
+
+        <el-menu-item index="1" style="width: 16.666666666%;font-size: 20px">
+            首页
+        </el-menu-item>
+
+        <el-menu-item index="2" style="width: 16.666666666%;font-size: 20px">
+            <a href="_yanxuekecheng" target="_blank" style="display: inline-block;padding: 0 60px">研学课程</a>
+        </el-menu-item>
+
+        <el-menu-item index="3" style="width: 16.666666666%;font-size: 20px">
+            <a href="jidijianshe" target="_blank" style="display: inline-block;padding: 0 60px">基地建设</a>
+        </el-menu-item>
+
+        <el-menu-item index="4" style="width: 16.6666666666%;font-size: 20px">
+            <a href="wangqihuigu/index.html" target="_blank" style="display: inline-block;padding: 0 60px">往期回顾</a>
+        </el-menu-item>
+
+        <el-menu-item index="5" style="width: 16.6666666666%;font-size: 20px">
+            <a href="http://www.sxxczxw.cn/" target="_blank" style="display: inline-block;padding: 0 60px">乡村振兴</a>
+        </el-menu-item>
+
+        <el-menu-item index="6" style="width: 16.6666666666%;font-size: 20px">
+            <a href="lianxiwomen" target="_blank" style="display: inline-block;padding: 0 60px">联系我们</a>
+        </el-menu-item>
+
+    </el-menu>
+<!-- 走马灯展示框-->
+    <template>
+        <el-carousel :interval="4000" type="card" height="400px" style="margin-top: 20px">
+            <el-carousel-item v-for="swiper in swipers">
+                <img v-bind:src="swiper" width="100%" height="100%"/>
+            </el-carousel-item>
+        </el-carousel>
+    </template>
+<!--  版心居中  -->
+    <div style="margin: 30px auto;width: 90%">
+        <!--    九宫格展示-->
+        <div>
+            <el-row :gutter="20" type="flex">
+                <el-col :span="6"><div class="grid-content bg-purple" style="border-color: lightcoral">
+                    <p style="line-height: 1.5;font-weight: bolder;">• 校企合作</p>
+                    <p style="line-height: 0.7">学校与研学企业分工合作</p>
+                    <p style="line-height: 0.7">节省人力物力</p>
+                    <p style="line-height: 0.7">提高工作效率</p>
+                    <img src="configImage/item1.png" class="showimg"/>
+                </div></el-col>
+                <el-col :span="6"><div class="grid-content bg-purple" style="border-color: orange">
+                    <p style="line-height: 1.5;font-weight: bolder">• 接触自然</p>
+                    <p style="line-height: 0.7">走出温室</p>
+                    <p style="line-height: 0.7">亲身体验大自然</p>
+                    <p style="line-height: 0.7">在探索实践中获取农业知识</p>
+                    <img src="configImage/item2.jpg" class="showimg"/>
+                </div></el-col>
+                <el-col :span="6">
+                    <div class="grid-content bg-purple" style="border-color: skyblue">
+                        <p style="line-height: 1.5;font-weight: bolder">• 安全保障</p>
+                        <p style="line-height: 0.7">出行前统一订购保险</p>
+                        <p style="line-height: 0.7">研学团队配置随行安全员</p>
+                        <p style="line-height: 0.7">时刻保障团队生命财产安全</p>
+                        <img src="configImage/item3.jpg" class="showimg"/>
+                    </div>
+                </el-col>
+                <el-col :span="6"><div class="grid-content bg-purple"  style="border-color: plum">
+                    <p style="line-height: 1.5;font-weight: bolder">• 寓教于乐</p>
+                    <p style="line-height: 0.7">专业技艺能手、资深导游带领</p>
+                    <p style="line-height: 0.7">依托当地相关研学场所</p>
+                    <p style="line-height: 0.7">多维度教学</p>
+                    <img src="configImage/item4.jpg" class="showimg"/>
+                </div></el-col>
+            </el-row>
+        </div>
+<!--      各个子版块预览框  -->
+        <div class="preview">
+            <a href="_yanxuekecheng" target="_blank">
+<!--                <h2>研学课程</h2>-->
+                <img src="configImage/subiconkecheng.png" style="height: 35px">
+            </a>
+            <hr style="height: 5px;background-color: red"/>
+<!--            以下内容需要动态生成  展示id倒数5个  -->
+            <div class="previewBox" v-for="yanxuekecheng in yanxuekechengs" style="position: relative">
+                <a v-bind:href="'/yanxuekechengDetail/'+yanxuekecheng.id" target="_blank">
+                    <img v-bind:src="yanxuekecheng.iconurl"/>
+                </a>
+                <a v-bind:href="'/yanxuekechengDetail/'+yanxuekecheng.id" target="_blank">
+                    <h4>{{yanxuekecheng.name}}</h4>
+                </a>
+            </div>
+        </div>
+
+        <div class="preview">
+            <a href="jidijianshe" target="_blank">
+<!--                <h2>研学基地</h2>-->
+                <img src="configImage/subiconjidi.png" style="height: 38px">
+            </a>
+            <hr style="height: 5px;background-color: red"/>
+            <!--            以下内容需要动态生成-->
+            <div class="previewBox" v-for="(jidi,index) in jidis" key="index">
+                <a v-bind:href="'/jidiDetail/'+jidi.id" target="_blank">
+                    <img v-bind:src="jidiImages[index]"/>
+                </a>
+                <a v-bind:href="'/jidiDetail/'+jidi.id"  target="_blank">
+                    <h4>{{jidi.jidiName}}</h4>
+                </a>
+            </div>
+        </div>
+
+<!--        往期回顾不需要图片 是文字链接-->
+        <div class="preview" style="height: 240px">
+            <a href="wangqihuigu/index.html" target="_blank">
+<!--                <h2>往期回顾</h2>-->
+                <img src="configImage/subiconwangqihuigu.png" style="height: 30px">
+            </a>
+            <hr style="height: 5px;background-color: red"/>
+            <!--            以下内容需要动态生成-->
+            <div class="previewBox" style="width: 100%;display: inline-block">
+                <a href="wangqihuigu/index.html" target="_blank" style="display: block">
+                    <h4>
+                        <font style="font-weight: lighter;font-style: oblique;line-height: 2;text-decoration: underline;">国庆特辑 | 小知青下乡收秋一日营</font>
+                    </h4>
+                </a>
+                <a href="wangqihuigu2/index.html" target="_blank" style="display: block">
+                    <h4>
+                        <font style="font-weight: lighter;font-style: oblique;line-height: 2;text-decoration: underline;">国庆特辑 | 游历农城名校，探索农耕文化一日营</font>
+                    </h4>
+                </a>
+                <a href="wangqihuigu3/index.html" target="_blank" style="display: block">
+                    <h4>
+                        <font style="font-weight: lighter;font-style: oblique;line-height: 2;text-decoration: underline;">国庆特辑 | 中北大学国防科技一日营</font>
+                    </h4>
+                </a>
+                <a href="wangqihuigu4/index.html" target="_blank" style="display: block">
+                    <h4>
+                        <font style="font-weight: lighter;font-style: oblique;line-height: 2;text-decoration: underline;">国庆特辑 | 少年与海五天四晚海洋研学营</font>
+                    </h4>
+                </a>
+                <a href="wangqihuigu5/index.html" target="_blank" style="display: block">
+                    <h4>
+                        <font style="font-weight: lighter;font-style: oblique;line-height: 2;text-decoration: underline;">国庆特辑 | 探索自然-太行历险记（三天两晚）</font>
+                    </h4>
+                </a>
+            </div>
+        </div>
+
+    </div>
+    <!--    页脚 -->
+<!--    法一-->
+    <div style="height: 190px;background-color:white;margin-top:50px;text-align: center;line-height: 60px;">
+        <div>
+            <font style="font-size: 10px">版权所有：太原市童引未来文化科技有限公司</font>
+            <hr>
+        </div>
+        <div>
+            <a href="http://www.zgxczx.cn/" target="_blank"><font style="font-size: 10px">乡村振兴网</font></a>
+            &nbsp;
+            <a href="http://www.sxxczxw.cn/" target="_blank"><font style="font-size: 10px">山西乡村振兴网</font></a>
+            &nbsp;
+            <a href="http://www.cctn.cn/" target="_blank"><font style="font-size: 10px">中国文旅网</font></a>
+            &nbsp;
+            <a href="lianxiwomen" target="_blank"><font style="font-size: 10px">联系我们</font></a>
+        </div>
+        <div style="line-height: 100%">
+            <font style="font-size: 10px">晋ICP备2022006635号</font>
+        </div>
+
+    </div>
+
+<!--    法二-->
+<!--    <hr/>-->
+<!--    <div style="height: 200px;">-->
+
+
+<!--    </div>-->
+
+
+</div>
+
+
+<script>
+
+    new Vue({
+        el:"#app",
+//----------------------------------------------------------------------------------------------------------------------
+        mounted(){
+            var _this = this;
+            //动态获取首页swiper展示图 （不限数量）
+            axios.get("/images/swipers").then((resp)=>{
+                this.swipers=resp.data;
+            })
+            //动态获取研学课程 研学基地 往期回顾图片 （5条数据）
+            axios.get("/yanxuekecheng/limit/5").then((resp)=>{
+                this.yanxuekechengs=resp.data;
+            })
+            //动态获取基地信息
+            axios.get("/jidi/limit/5").then((resp)=>{
+                console.log(resp.data);
+                console.log(resp.data.imageUrls);
+                _this.jidis=resp.data.jidis;
+                _this.jidiImages=resp.data.imageUrls;
+                console.log(this.jidiImages);
+            });
+                //以及基地的一张展示图
+            // for (let i = 0; i < this.jidis.length; i++) {
+            //     if(this.jidis[i].id !== null){
+            //         axios.get('/images/'+this.jidis[i].id+'/1').then((resp)=>{
+            //             this.jidiImages.push(resp.data);
+            //         });
+            //     }
+            // }
+        },
+//----------------------------------------------------------------------------------------------------------------------
+        methods: {
+
+        },
+//----------------------------------------------------------------------------------------------------------------------
+        data() {
+            return {
+                //展示框图片路径数组
+                swipers : [
+
+                ],
+                yanxuekechengs: [
+                    {
+                        id:'',
+                        name:'',
+                        price:'',
+                        description:'',
+                        iconurl:'',
+                    }
+                ],
+                jidis:[
+                    {
+                        id: '',
+                        jidiName:'',
+                        description : ''
+                    },
+                ],
+                jidiImages: [
+                    ''
+                ],
+
+                wangqihuigus:[
+
+                ],
+                //搜索框内容
+                input:""
+            }
+        },
+    })
+
+</script>
+
+</body>
+</html>

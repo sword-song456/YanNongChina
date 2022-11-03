@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--全部动态获取-->
+<head>
+    <script src="../js/vue.js"></script>
+    <script src="../js/axios-0.18.0.js"></script>
+    <script src="../element-ui/lib/index.js"></script>
+    <script src="../js/common.js"></script>
+    <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="icon" href="../configImage/favicon.png">
+    <meta charset="UTF-8">
+    <title>课程展示</title>
+    <style>
+        /*.root{*/
+        /*    background-color: white;*/
+        /*    width: 80%;*/
+        /*    height: 800px;*/
+        /*    border-radius: 30px;*/
+        /*    margin: 20px auto;*/
+        /*    padding: 30px;*/
+        /*    padding-top: 60px;*/
+        /*    position: relative;*/
+        /*}*/
+        /*.mainphoto{*/
+        /*    width: 80%;*/
+        /*    height: 400px;*/
+        /*    margin: 10px 115px;*/
+        /*    border-radius: 20px;*/
+        /*}*/
+        .topbox{
+            float: top;
+            width: 100%;
+            height: 226px;
+            text-align: center;
+            font-size: 35px;
+            color: #fff;
+            margin: auto;
+            background: url(https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.vjshi.com%2F2017-11-17%2F64bdb2a09a404add405e7d05680ba6ee%2F00004.jpg%3Fx-oss-process%3Dstyle%2Fwatermark&amp;refer=http%3A%2F%2Fpic.vjshi.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659348017&amp;t=d97ed4a5f6dc3656569064e4d59c83eb) top center repeat;
+            z-index: -999;
+        }
+        .motherbox{
+            width: 80%;
+            height: auto;
+            margin: 0 auto;
+            margin-top: -45px;
+            background-color: white;
+            position: relative;
+            padding-bottom: 30px;
+        }
+        .motherbox p{
+            word-break: break-all;!important;
+            text-indent: 2em;
+            line-height: 1.5;
+        }
+        .el-menu{
+            border: none;
+        }
+        .el-menu-item{
+            width: 100px;
+        }
+        .tagbox{
+            width: 1000px;
+            border-left: 1px solid #b6b1b1;
+            display: none;
+            height: 250px;
+            padding: 30px;
+            padding-top: 18px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="app">
+    <div style="position:fixed;left:0;top:0;width:100%;height:60px;box-shadow:0 10px 10px 0 rgba(0,0,0,.05);background-color:#FFFFFF;z-index: 5" class="top">
+        <!--        小图标-->
+        <img src="../configImage/subicon.png" style="height: 100%;float: left">
+        <!--   靠右 小程序入口（二维码）、我的课程、登录/注册-->
+        <div style="float: right;">
+            <a class="item" id="xiaochengxu" href="#" style="vertical-align: top">
+                <img src="../configImage/xiaochengxu.png">
+                <p>小程序</p>
+                <div style="float: bottom;background-color: white">
+                    <img src="../configImage/xiaochengxu.png">
+                </div>
+            </a>
+            <!--        <a class="item" href="#">-->
+            <!--            <img src="../configImage/wodekecheng.png">-->
+            <!--            <p>课程</p>-->
+            <!--        </a>-->
+            <a v-if="user.iconurl===''" class="item" href="#" @click="loginDialog = true">
+                <img src="../configImage/weidenglu.png">
+                <p>登录</p>
+            </a>
+            <a v-else class="item" :href="'/userDetail/'+user.id">
+                <img :src="user.iconurl">
+                <p>{{user.username}}</p>
+            </a>
+        </div>
+    </div>
+<!--研学课程详情展示页面-->
+    <div class="topbox">
+        <p style="color: white;margin:0 auto;line-height: 240px;font-size: 40px">{{yanxuekecheng.name}}</p>
+    </div>
+    <div class="motherbox">
+        <div style="display: block">
+            <div style="padding: 30px;height: 400px;width: auto">
+                <img :src="yanxuekecheng.iconurl" alt="加载图片时出错" style="width: 600px;height: 340px">
+            </div>
+            <div style="position: absolute;right: 0;top: 0;padding: 30px;width: 570px;height: 400px">
+                <p style="font-size: 14px;color: #2a2a2a;line-height: 30px;"><font style="color: #777">课程编号 : </font> &nbsp;&nbsp; {{yanxuekecheng.id}}</p>
+                <p style="font-size: 14px;color: #2a2a2a;line-height: 30px;"><font style="color: #777">价格 : </font>{{yanxuekecheng.price}}元/期</p>
+                <p style="font-size: 14px;color: #2a2a2a;line-height: 30px;"><font style="color: #777">课程描述 : </font>{{yanxuekecheng.description}}</p>
+                <el-button type="primary" style="position: absolute;bottom: 30px;right: 60px">我要报名</el-button>
+            </div>
+        </div>
+        <el-divider></el-divider>
+        <div style="display: inline-block;vertical-align: top">
+            <el-col :span="12">
+                <el-menu
+                        default-active="1"
+                        class="el-menu-vertical-demo"
+                        @select="handleSelect">
+                    <el-menu-item index="1">
+                        <span slot="title">教练团队</span>
+                    </el-menu-item>
+                    <el-menu-item index="2">
+                        <span slot="title">课程设计</span>
+                    </el-menu-item>
+                    <el-menu-item index="3">
+                        <span slot="title">顾客反馈</span>
+                    </el-menu-item>
+                </el-menu>
+            </el-col>
+        </div>
+<!--        团队-->
+        <div class="tagbox">
+            <p>团队经过长期探索，已经建立起较为完善的运行机制，包括产品 开发、市场销售、教练培训、后勤统筹、财务计调、产品推广、新媒 体部七大部门，具备承接社会各类团建活动的能力。团队总负责人即项目创始人——肖伟，具有丰富的社会活动经验，在外执行过上百场研学活动，并成功策划山西省植树节千人绿化研学项目，管理能力突出，领导才能卓越，是太原市爱在旅途文化科技有限公司和太原童引未来的联合创始人和股东，在其带领下团队形成独具特色的创业文化，迸发出强劲的创新力和集体凝聚力。其他管理人员大多为太原理工大学体育学院休闲体育专业学生，具有专业的户外活动知识，且均具有研学机构实习经验，带队技能过硬，对团队建设发挥重要作用。此外团队内还有国际经济与贸易专业的同学负责市场营销与财务，以及来自校媒的同学负责产品的线上及线下的宣传和推广。研农中国团队核心成员均是太原理工大学的学生，与农业有着密不可分的缘分。我们立足农业，致力于乡村振兴发展战略，旨在研发高质量研学产品，提升服务，就是想改变中国研学市场重游轻学的现状。我们的目标是将大自然变成学生的教科书。此外，作为21世纪的大学生，我们更应该以乡村振兴为己任，将研学旅行和农业相结合，发展研学的同时带动乡村经济发展，增添农民兴奋感。为了实现这个伟大目标，研农中国团队诞生了，我们将不懈努力，将我们的青春和对祖国的热爱挥洒在祖国的乡间。
+            <p>团队现有核心成员8人，在职教练18人，兼职教练300余人， 均来自山西各大高校。这些成员均经过系统培训，专业素质过硬，这批教练为团队的发展奠定了强大的人才基础。</p></p>
+            <p>他们是最伟大的工匠，将一块块砖石垒砌成坚实壮美的大厦;他们是一个最富有战斗力的团队，充满激情，不畏艰难，用智慧和力量开拓事业;他们用职责、忠诚、执行力和组织力成为我们发展的开拓者。他们远离都市，工作艰苦努力，不断创新，各项工作都取得了显著成绩，为我们的发展贡献了自己的力量。</p>
+        </div>
+<!--        课程设计-->
+        <div class="tagbox">
+            <p>教育部等11部门《关于推动中小学生研学旅行的意见》指出：“促进研学旅行和学校课程有机融合，要精心设计研学旅行活动课程”。这对我国中小学研学旅行课程实施提出了明确的要求。国外现有研学旅行模式主要有自然教育模式、生活体验模式、文化考察模式和交换生模式，把国外这四种研学旅行模式和我国中小学校的实际情况相结合，中小学研学旅行课程设计、实施应从以下方面展开。</p>
+            <p>一、拓展教育空间</p>
+            <p>二、进行体验探究式教学</p>
+            <p>三、实施全程育人策略</p>
+            <p>&nbsp;</p>
+            <p>研农中国平台的研学课程严格遵守教育局意见，用心提供研学服务。我们经过多次实地考察，精心规划往返路线，并且与目的地服务商签署保障合同，保障孩子的安全；对带队教练进行充分的培训，对当地文化、民俗充分整理，达到完美的知识传递与分享；同时在路程已经日常起居中加入礼仪和良好生活习惯的引导，潜移默化地纠正孩子的坏习惯。</p>
+            <p>相信您和您的孩子一定能在我们的研学课程中收获和成长！</p>
+
+        </div>
+        <!--        顾客反馈-->
+        <div class="tagbox">
+            <p style="font-weight: lighter">暂无~~</p>
+        </div>
+    </div>
+
+
+
+<!--    <div class="root">-->
+<!--&lt;!&ndash;        图片&ndash;&gt;-->
+<!--        <img class="mainphoto" v-bind:src="yanxuekecheng.iconurl" alt="加载时出错">-->
+<!--        <hr style="height: 5px;background-color: red"/>-->
+<!--&lt;!&ndash;        文字描述&ndash;&gt;-->
+<!--        <div>-->
+<!--            <h1 style="margin-top: 30px">{{yanxuekecheng.name}}</h1>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <p style="margin-top: 30px">{{yanxuekecheng.description}}</p>-->
+<!--        </div>-->
+<!--        <div style="position: absolute;right: 30px;bottom: 30px">-->
+<!--            <el-button type="primary">我要报名</el-button>-->
+<!--        </div>-->
+<!--    </div>-->
+</div>
+<script>
+    var strings = location.href.split("/");
+    var yanxuekechengId = strings[strings.length - 1];
+    console.log(yanxuekechengId);
+    new Vue({
+        el : "#app",
+        mounted(){
+            //根据id获取课程数据
+            axios.get("/yanxuekecheng/"+yanxuekechengId).then((resp)=>{
+                this.yanxuekecheng = resp.data;
+            });
+            this.handleSelect(1)
+        },
+        methods:{
+            handleSelect(key) {
+                //根据key显示不同页面
+                var tagBoxs = document.querySelectorAll(".tagbox");
+                for(var i = 0; i < tagBoxs.length; i++){
+                    tagBoxs[i].style.display = "none";
+                }
+                tagBoxs[key-1].style.display = "inline-block";
+            },
+        },
+        data() {
+            return{
+                yanxuekecheng:{
+                    id:'',
+                    name:'',
+                    price:'',
+                    description:'',
+                    iconurl:'',
+                },
+                user:{
+                    id:'',
+                    gender:'',
+                    username:'',
+                    description:'',
+                    iconurl: '',
+                    password:'',
+                },
+                userLogin:{
+
+                },
+            }
+        }
+    })
+</script>
+</body>
+</html>

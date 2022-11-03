@@ -1,0 +1,4 @@
+<view class='camera'>
+  <camera wx:if="{{isAuth}}" device-position="back" flash="off" binderror="error"></camera>
+</view>
+<button class="takePhoto" type="primary" bindtap="takePhoto">拍照识别</button>

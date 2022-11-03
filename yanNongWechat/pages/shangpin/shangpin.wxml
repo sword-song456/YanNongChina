@@ -1,0 +1,10 @@
+<!--数据已成功获取-->
+<view>
+    <view class="item" wx:for="{{shangpins}}" wx:key="index">
+        <image src="https://www.yannongcn.link/{{item.iconurl}}" mode="widthFix"></image>
+        <view style="padding: 15rpx;padding-top: 5rpx;">
+            <view style="font-size: 1.5em;"><text style="font-size: 0.7em;">￥</text>{{item.price}}</view>
+            <text>{{item.name}}</text>
+        </view>
+    </view>
+</view>

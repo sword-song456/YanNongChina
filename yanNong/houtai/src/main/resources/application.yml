@@ -1,0 +1,48 @@
+
+
+#三种环境
+
+#开发
+spring:
+#  profiles: dev
+  #数据库配置 根据自己修改
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #url: jdbc:mysql://localhost:3306/yannongzhongguo
+    url: jdbc:mysql://124.71.40.188/yannongzhongguo
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+  freemarker:
+    suffix: .html
+    cache: false
+    prefix: classpath:/templates/
+  servlet:
+    multipart:
+      max-file-size: 20MB
+
+server:
+  #这个是原来的https证书 一个证书只能对应一个域名 所以换域名以后要再申请证书 命名为ssl.jks放入resource目录中
+  #因为微信小程序必须要https的后台才能访问 所以必须要申请ssl证书
+  ssl:
+    key-store: classpath:ssl.jks
+    key-store-password: 123456
+    key-store-type: PKCS12
+    key-alias: tomcat
+  port: 443
+#  port-http: 80
+  tomcat:
+    max-http-header-size: 8192
+
+
+#测试
+---
+#spring:
+#  profiles: test
+#
+#
+#
+##上线
+#---
+#spring:
+#  profiles: pro

@@ -1,0 +1,21 @@
+<!--pages/wode/wode.wxml-->
+<view>
+  <!-- 1.头像框 -->
+  <image class="touxiang" src="{{touxiangUrl}}"></image>
+  <view class="box">
+    <text class="username">{{user.name}}</text>
+    <view class="bar">
+        <image src="/icon/wodekecheng.png"></image>
+        <text>我的课程</text>
+    </view>
+    <view class="bar" style="top: 350rpx;">
+        <image src="/icon/wodeshangpin.png"></image>
+        <text>我的商品</text>
+    </view>
+    <view class="bar" style="top: 450rpx;">
+        <image src="/icon/guanyuwomen.png"></image>
+        <text>关于我们</text>
+    </view>
+  </view>
+  
+</view>

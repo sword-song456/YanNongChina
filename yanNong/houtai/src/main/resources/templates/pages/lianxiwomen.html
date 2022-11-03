@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="../js/vue.js"></script>
+    <script src="../js/axios-0.18.0.js"></script>
+    <script src="../element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="icon" href="../configImage/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+    <meta charset="UTF-8">
+    <title>联系我们</title>
+    <style>
+        p{
+            line-height: 2;
+            text-indent: 2em;
+            font-size: 18px;
+        }
+        .text{
+            background: none;
+            margin: 0 auto;
+            width: 70%;
+        }
+
+        .el-header, .el-footer {
+            background-color: rgba(246, 55, 55, 20);
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+        }
+
+        .el-aside {
+            background-color: #D3DCE6;
+            color: #333;
+            text-align: center;
+            line-height: 200px;
+        }
+
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: left;
+            line-height: 60px;
+        }
+
+        body > .el-container {
+            margin-bottom: 40px;
+        }
+
+        .el-container:nth-child(5) .el-aside,
+        .el-container:nth-child(6) .el-aside {
+            line-height: 260px;
+        }
+
+        .el-container:nth-child(7) .el-aside {
+            line-height: 320px;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <img src="configImage/icon.png" style="height: 150px;display: flow;background:none">
+    <!--正文-->
+    <div class="text">
+        <div style="height: 50px;width: 100%"></div>
+
+        <el-container>
+            <el-header>
+                <font style="font-weight: bolder">关于我们</font>
+            </el-header>
+            <el-main>
+                <p>公司主体：太原市童引未来文化科技有限公司</p>
+                <p>项目负责人：肖伟 15534993382 &nbsp;&nbsp; 王文政 18435138299</p>
+                <p>联系邮箱：1261469655@qq.com</p>
+                <p>公司地址：太原市尖草坪区学院路3号182幢</p>
+            </el-main>
+        </el-container>
+
+        <el-container>
+            <el-header>
+                <font style="font-weight: bolder">关于研农中国</font>
+            </el-header>
+            <el-main>
+                <p>研农中国是响应国家提出的乡村振兴战略，基于教育部大力推进中小学研学旅行和国家文化旅游局重点打造乡村旅游的政策背景，采用“农业+旅游+教育+互联网”的模式，开发研学课程、指导建设研学基地的休 闲农业研学活动服务项目。同时，致力于构建研农中国平台，利用平台优势吸引更多红旅项目，提供信息交互和资源共享的平台，整合资源、提高效率、协同合作，形成全面共赢的良好创业局面。</p>
+                <p>本项目成立了运营主体：童引未来文化科技有限公司，提供休闲农业研学路线的研发和休闲农业研学基地的建设，现有精品特色研学路线40余条，服务和建设研学基地20余家，固定在职教练18人，兼职教练300余人，接待教育机构和中小学共5000余人，公司去年 全年盈利25万，我公司在山西农业研学方面属于起步早的，太原及榆次地区的教育机构和中小学农业研学的路线基本上采用我公司研发的路线，在农业研学方面处于领先位置，十年教育塑造一个优秀孩子，百年努力打造一家伟大企业，公司规划三年内发展研学合伙人1000家，指导建设研学基地100家，平台吸引农业特色创业项目20家，让农业研学旅行之花开满神州大地。</p>
+            </el-main>
+        </el-container>
+
+        <el-container>
+            <el-header>
+                <font style="font-weight: bolder">项目意义</font>
+            </el-header>
+            <el-main>
+                <p style="line-height: 2">• 经济效益</p>
+                <p>研学产品与服务的盈利来源主要分为课程输出与执行收入、指导建设基地收入、农产品网络销售收入三方面，每一方面都可以展开广泛创收，实现全面深度盈利。定制研学路线与专项基地建设可以实现顶层创收，课程设计不仅可以实现自我产品投入市场，直接实现盈利，还可以承包给相关研学机构、教育机构，收取设计费用、服务费用或 按一定比例抽取活动利润。在产品直接投入市场过程中，可以产生会员年费收入、外派教练执行收入、课程衍生品售卖收入。在推广宣传过程中，可以出售研学视频、研学照片，在抖音、快手等网络平台播放赚取利润。</p>
+                <p style="line-height: 2">• 社会效益</p>
+                <p>实现乡村振兴与精准扶贫。深入贫困偏远农村地区，依托当地农业资源发展特色体验式研农旅行，联合当地旅游部门以及其他管理部门，整合当地旅游资源，在为农村地区带来研学创收的同时完善相关 基础设施建设，双项带动乡村振兴与精准扶贫。</p>
+                <p>重温红色经典，传承农业文明。经典文化是中华文化的重要组成部分，开展趣味性、体验性高的主题研学活动来带动学生学习兴趣，结合学校课程实现内外互补、相互促进，可以推进素质教育改革，有利于塑造学生的农业情怀和大国情怀。</p>
+                <p>改善农村社区管理结构。在经济利益得到有效保障的基础上，村民更乐于接受先进改革思想，活动带动当地留守老人参与再就业，提升人们对留守老人这一特殊群体的关注度，体现社会主义人文关怀，相应的村级福利保障制度也得以产生发展</p>
+                <p>&nbsp</p>
+            </el-main>
+        </el-container>
+
+
+    </div>
+</div>
+<script>
+    new Vue({
+        el : "#app",
+        mounted(){
+
+        },
+        methods:{
+
+        },
+        data() {
+            return{
+
+            }
+        }
+    })
+</script>
+</body>
+</html>

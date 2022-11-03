@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="../js/vue.js"></script>
+    <script src="../js/axios-0.18.0.js"></script>
+    <script src="../element-ui/lib/index.js"></script>
+    <script src="../js/common.js"></script>
+    <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="icon" href="../configImage/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+    <meta charset="UTF-8">
+    <title>研学课程</title>
+    <style>
+        .yanxuekechengItem{
+            display: inline-block;
+            width: 240px;
+            height: 190px;
+            margin: 16px;
+            position: relative;
+        }
+        .yanxuekechengItem img{
+            position: absolute;
+            top:10px;
+            width: 240px;
+            height: 145px;
+        }
+        .yanxuekechengItem h5{
+            position: absolute;
+            top:165px
+        }
+        .el-radio-button__inner{
+            border: none;
+            border-left: none;
+        }
+    /*    -----------------------------------------------------------------------------------------------------------*/
+
+    </style>
+</head>
+<body>
+<div id="app">
+<!--    上边栏-->
+    <div style="position:fixed;left:0;top:0;width:100%;height:60px;box-shadow:0 10px 10px 0 rgba(0,0,0,.05);background-color:#FFFFFF;z-index: 5" class="top">
+        <!--        小图标-->
+        <img src="../configImage/subicon.png" style="height: 100%;float: left">
+        <!--        搜索栏-->
+        <div style="height: 40px;width: 300px;margin:10px 10px 10px 60px;border-radius: 30px;background-color: hsla(0,0%,61%,.1);">
+            <input type="text" maxlength="20" name="keyword" placeholder="输入想要搜索的课程" autocomplete="off" v-model="keyword"style="margin-top: 10px"></input>
+            <el-button type="danger" id="select" style="background-color: #ff0000">搜索</el-button>
+        </div>
+        <!--   靠右 小程序入口（二维码）、我的课程、登录/注册-->
+        <div style="float: right;">
+            <a class="item" id="xiaochengxu" href="#" style="vertical-align: top">
+                <img src="../configImage/xiaochengxu.png">
+                <p>小程序</p>
+                <div style="float: bottom;background-color: white">
+                    <img src="../configImage/xiaochengxu2.png">
+                </div>
+            </a>
+    <!--        <a class="item" href="#">-->
+    <!--            <img src="../configImage/wodekecheng.png">-->
+    <!--            <p>课程</p>-->
+    <!--        </a>-->
+            <a v-if="user.iconurl===''" class="item" href="#" @click="loginDialog = true">
+                <img src="../configImage/weidenglu.png">
+                <p>登录</p>
+            </a>
+            <a v-else class="item" :href="'/userDetail/'+user.id">
+                <img :src="user.iconurl">
+                <p>{{user.username}}</p>
+            </a>
+        </div>
+    </div>
+<!--    从数据库查询课程信息并展示-->
+    <div style="position: relative; margin: 80px auto;width: 90%;background-color: white;border-radius: 20px">
+<!--        <img src="configImage/yanxuekechengsubicon.png" style="width: 600px;display: block;padding-top: 10px"/>-->
+<!--        <h1 style="padding: 20px">精品研学课程</h1>-->
+        <div style="padding: 10px;padding-top: 20px">
+            &nbsp; &nbsp; 类别 &nbsp; &nbsp; <el-radio-group v-model="radio1">
+            <el-radio-button label="全部" style="border-left: none;"></el-radio-button>
+            <el-radio-button label="红色历史"></el-radio-button>
+            <el-radio-button label="军事体验"></el-radio-button>
+            <el-radio-button label="农耕文化"></el-radio-button>
+            <el-radio-button label="自然探秘"></el-radio-button>
+            <el-radio-button label="新兴科技"></el-radio-button>
+            <el-radio-button label="亲子研学"></el-radio-button>
+            <el-radio-button label="线上研学"></el-radio-button>
+            </el-radio-group>
+        </div>
+        <div style="padding: 10px">
+            &nbsp; &nbsp; 年龄 &nbsp; &nbsp; <el-radio-group v-model="radio2">
+            <el-radio-button label="全部"></el-radio-button>
+            <el-radio-button label="6岁及以下"></el-radio-button>
+            <el-radio-button label="7~12岁"></el-radio-button>
+            <el-radio-button label="13~16岁"></el-radio-button>
+            <el-radio-button label="17岁及以上"></el-radio-button>
+            </el-radio-group>
+        </div>
+        <div style="padding: 10px;padding-bottom: 20px">
+            &nbsp; &nbsp; 排序 &nbsp; &nbsp; <el-radio-group v-model="radio3">
+            <el-radio-button label="综合排序" style="border-left: none;"></el-radio-button>
+            <el-radio-button label="最多选择"></el-radio-button>
+            <el-radio-button label="最多好评"></el-radio-button>
+            <el-radio-button label="最新上线"></el-radio-button>
+            <el-radio-button label="平台推荐"></el-radio-button>
+            </el-radio-group>
+        </div>
+        <hr style="height: 5px;background-color: red;"/>
+        <div class="yanxuekechengItem" v-for="yanxuekechengitem in yanxuekechengs">
+            <a v-bind:href="'/yanxuekechengDetail/'+yanxuekechengitem.id" target="_blank" style="height: 100%;border-radius: 10px">
+                <img v-bind:src="yanxuekechengitem.iconurl" alt="暂无图片" style="border-radius: 10px">
+                <h5>{{yanxuekechengitem.name}}</h5>
+            </a>
+        </div>
+    </div>
+</div>
+<script>
+<!--    每个工具栏的搜索功能要各自写 应为每个页面搜索的内容库不一样 课程是课程的数据库 -->
+    new Vue({
+        el : "#app",
+        mounted(){
+            this.yanxuekechengLoad();
+        },
+        methods:{
+            yanxuekechengLoad(){
+                axios.get("/yanxuekecheng").then((resp)=>{
+                    this.yanxuekechengs=resp.data;
+                })
+            },
+        },
+        data() {
+            return{
+                keyword:'',
+                loginDialog : false,
+                yanxuekechengs: [
+                    {
+                        id:'',
+                        name:'',
+                        price:'',
+                        description:'',
+                        iconurl:'',
+                    }
+                ],
+                user:{
+                    id:'',
+                    gender:'',
+                    username:'',
+                    description:'',
+                    iconurl: '',
+                    password:'',
+                },
+                userLogin:{
+
+                },
+                radio1:'全部',
+                radio2:'全部',
+                radio3:'综合排序',
+            }
+        }
+    })
+</script>
+</body>
+</html>

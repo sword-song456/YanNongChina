@@ -1,0 +1,21 @@
+<!--pages/yanxuekecheng/yanxuekecheng.wxml-->
+
+<!-- 研学课程装饰栏 -->
+<view style="margin: 20rpx;">
+  
+</view>
+
+<view class="motherBox">
+    <view class="item" wx:for="{{yanxuekechengs}}" wx:key="index">
+        <image class="yanxuekechengImg" src="https://zzjava.top/{{item.iconurl}}"></image>
+        <view class="yexuekechengDesc">
+            <view style="display: block;">
+              <text>{{item.name}}</text>
+            </view>
+            <view id="xiangqing">
+                <navigator url="/pages/yanxuekechengDetail/yanxuekechengDetail?id={{item.id}}">查看详情></navigator>
+            </view>
+        </view>
+        
+    </view>
+</view>

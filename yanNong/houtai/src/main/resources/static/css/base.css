@@ -1,0 +1,19 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+a{
+    text-decoration: none;
+    color:black;
+}
+body{
+    margin: 0;
+    background-image: url("../configImage/newbackground.png");
+    background-repeat: no-repeat;
+    width: 1519.200px;
+    height: auto;
+}
+p{
+    word-break: break-all;!important;
+}

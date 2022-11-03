@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="../js/vue.js"></script>
+    <script src="../js/axios-0.18.0.js"></script>
+    <script src="../element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="icon" href="../configImage/favicon.png">
+
+<!--    <script src="../../static/js/vue.js"></script>-->
+<!--    <script src="../../static/js/axios-0.18.0.js"></script>-->
+<!--    <script src="../../static/element-ui/lib/index.js"></script>-->
+<!--    <link rel="stylesheet" href="../../static/element-ui/lib/theme-chalk/index.css">-->
+<!--    <link rel="stylesheet" href="../../static/css/base.css">-->
+<!--    <link rel="icon" href="../../static/configImage/favicon.png">-->
+
+    <meta charset="UTF-8">
+    <title>研农中国后台管理</title>
+
+    <style>
+        p{
+            word-break: break-all;!important;
+        }
+        .container{
+            margin: 0 auto;
+            width: 80%;
+            height: 110%;
+        }
+        .tagbox{
+            display: none;
+            padding: 10px;
+        }
+        .zhanshituItem{
+            display: inline-block;
+        }
+        .yanxuekechengItem{
+            width: 90%;
+            height: 300px;
+            margin: 10px auto;
+            position: relative;
+        }
+        .yanxuekechengItem img{
+            position: absolute;
+            top:10px;
+            left: 10px;
+            height: 260px;
+            width: 330px;
+            border-radius: 20px;
+        }
+    </style>
+
+</head>
+<body style="width: 1519.200px;height: 2359.600px">
+<div id="app">
+<!--    导航栏-->
+    <el-menu
+            :default-active="activeIndex"
+            class="el-menu-demo"
+            mode="horizontal"
+            @select="handleSelect"
+            background-color="#545c64"
+            text-color="#fff"
+            active-text-color="#ffd04b">
+        <el-menu-item index="1" @click="zhanshituLoad()">展示图管理</el-menu-item>
+        <el-menu-item index="2" @click="kechengLoad()">课程管理</el-menu-item>
+        <el-menu-item index="3" @click="xueyuanLoad()">学员管理</el-menu-item>
+        <el-menu-item index="4" @click="jidiLoad()">基地管理</el-menu-item>
+        <el-menu-item index="5" @click="xiangceLoad()">图片储存</el-menu-item>
+        <el-menu-item index="6" @click="shangpinLoad()">商品信息</el-menu-item>
+    </el-menu>
+<!--    这里面装所有的盒子 不用的隐藏-->
+    <div class="container" style="background-color: white">
+<!--        展示图管理-->
+        <div id="zhanshituguanli" class="tagbox">
+<!--            文件上传组件 -->
+            <el-upload
+                    action="/upload/image/swipers"
+                    list-type="picture-card"
+                    :on-preview="handlePictureCardPreview"
+                    :on-remove="handleRemove"
+                    :on-success="uploadSuccess"
+                    style="margin: 20px">
+                <i class="el-icon-plus"></i>
+            </el-upload>
+            <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="dialogImageUrl" alt="">
+            </el-dialog>
+
+            <hr style="height: 5px;background-color: darkgray"/>
+
+            <div v-for="swiper in swipers" class="zhanshituItem">
+                <img v-bind:src="swiper" width="200px" height="120px" style="display: block;margin: 19.5px;border-radius: 10px"/>
+                <el-button type="danger" icon="el-icon-delete" circle style="margin-top: -8px;margin-left: 90px;margin-bottom: 5px" @click="deleteImage(swiper)"></el-button>
+            </div>
+        </div>
+<!--        课程管理-->
+        <div class="tagbox">
+<!--            由于图片上传和文字上传的controller不同 所以用两个表单 -->
+<!--            图片上传-->
+            <el-upload
+                    action="/upload/image/yanxuekecheng"
+                    list-type="picture-card"
+                    :on-preview="handlePictureCardPreview2"
+                    :on-remove="handleRemove2"
+                    :on-success="uploadSuccess2"
+                    style="margin: 20px">
+                <i class="el-icon-plus"></i>
+            </el-upload>
+            <el-dialog :visible.sync="dialogVisible2">
+                <img width="100%" :src="dialogImageUrl2" alt="">
+            </el-dialog>
+<!--        文本上传 -->
+            <el-form ref="form" :model="yanxuekecheng" label-width="80px">
+                <el-form-item label="活动名称">
+                    <el-input v-model="yanxuekecheng.name"></el-input>
+                </el-form-item>
+                <el-form-item label="价格">
+                    <el-input v-model="yanxuekecheng.price" aria-placeholder="请输入纯数字"></el-input>
+                </el-form-item>
+                <el-form-item label="活动描述">
+                    <el-input v-model="yanxuekecheng.description"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="yanxuekechengUpoad()">立即创建</el-button>
+                    <el-button>取消</el-button>
+                </el-form-item>
+            </el-form>
+            <hr style="height: 5px;background-color: darkgray"/>
+<!--            展示-->
+            <div class="yanxuekechengItem" v-for="yanxuekechengitem in yanxuekechengs">
+                <img v-bind:src="yanxuekechengitem.iconurl" alt="暂无图片">
+                <div style="width: 700px;height: 100%;position: absolute;left: 360px">
+                    <h3 style="text-align: center;display: block">{{yanxuekechengitem.name}}</h3>
+                    <p style="text-align: left;display: block">{{yanxuekechengitem.description}}</p>
+                    <p style="text-align: right;display: block">价格:{{yanxuekechengitem.price}}</p>
+                    <div style="position: absolute;bottom: 20px;right: 20px">
+                        <el-button type="primary">修改</el-button>
+                        <el-button type="danger" @click="yanxuekechengDelete(yanxuekechengitem.id)">删除</el-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!--        学员管理-->
+        <div class="tagbox">
+            <template>
+                <el-table
+                        :data="users"
+                        border
+                        style="width: 100%">
+                    <el-table-column
+                            prop="id"
+                            label="id"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="gender"
+                            label="性别"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="username"
+                            label="用户名"
+                            width="140">
+                    </el-table-column>
+                    <el-table-column
+                            prop="password"
+                            label="密码"
+                            width="140">
+                    </el-table-column>
+                    <el-table-column
+                            prop="description"
+                            label="个性签名">
+                    </el-table-column>
+                    <el-table-column
+                            fixed="right"
+                            label="操作"
+                            width="120">
+                        <template slot-scope="scope">
+                            <el-button
+                                    @click.native.prevent="deleteRow(users[scope.$index])"
+                                    type="text"
+                                    size="small">
+                                移除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </template>
+        </div>
+<!--        基地管理-->
+        <div class="tagbox">
+            <div>
+                <el-button type="primary" style="float: right;margin: 20px" @click="newjidiDialogVisible=true">新建基地</el-button>
+            </div>
+            <!--            基地列表-->
+            <template>
+                <el-table
+                        :data="jidis"
+                        style="width: 100%"
+                        max-height="800">
+                    <el-table-column
+                            fixed
+                            prop="jidiName"
+                            label="基地"
+                            width="1000">
+                    </el-table-column>
+
+                    <el-table-column
+                            fixed="right"
+                            label="操作"
+                            width="100">
+                        <template slot-scope="scope">
+                            <el-button @click="jidiRemove(scope.row)" type="text" size="small">删除</el-button>
+                            <el-button type="text" size="small" @click="jidiUpdte(scope.row)">编辑</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </template>
+<!--            新建基地 -->
+            <el-dialog title="新建基地" :visible.sync="newjidiDialogVisible">
+                <el-form :model="newjidi">
+                    <el-form-item label="基地名称" label-width=120px prop="jidiName">
+                        <el-input v-model="newjidi.jidiName"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="notsavejidi()">取 消</el-button>
+                    <el-button type="primary" @click="savejidi()">确 定</el-button>
+                </div>
+            </el-dialog>
+<!--            编辑基地-->
+            <el-dialog title="编辑基地" :visible.sync="updatejidiDialogVisible">
+                <el-form :model="jidi">
+                    <el-form-item label="基地名称" label-width=120px prop="jidiName">
+                        <el-input v-model="jidi.jidiName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="基地描述" label-width=120px prop="description">
+                        <el-input type="textarea" v-model="jidi.description"></el-input>
+                    </el-form-item>
+                </el-form>
+<!--                图片表单-->
+<!--                新图片上传-->
+                <el-upload
+                        :action="'/upload/image/jidi/'+jidi.id"
+                        list-type="picture-card"
+                        :on-preview="handlePictureCardPreview3"
+                        :on-remove="handleRemove3"
+                        :on-success="uploadSuccess3"
+                        style="margin: 20px">
+                    <i class="el-icon-plus"></i>
+                </el-upload>
+                <el-dialog :visible.sync="dialogVisible3">
+                    <img width="100%" :src="dialogImageUrl3" alt="">
+                </el-dialog>
+<!--                已上传图片展示-->
+                <div class="demo-image">
+                    <div class="block" v-for="jidiImage in jidiImages" style="display: inline-block">
+                        <el-image
+                                :id=jidiImage
+                                style="width: 100px; height: 100px;display: block;border-radius: 5px;margin: 10px;color: #ff4d51"
+                                :src=jidiImage
+                                fit=fill>
+                        </el-image>
+                        <el-checkbox @change="deletejidiImage(jidiImage)" style="margin-left: 54px"></el-checkbox>
+<!--                        <el-button-->
+<!--                                type="danger"-->
+<!--                                icon="el-icon-delete"-->
+<!--                                circle-->
+<!--                                @click="deletejidiImage(jidiImage)"-->
+<!--                                style="margin-left: 30px"-->
+<!--                        ></el-button>-->
+                    </div>
+                </div>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="updatejidiDialogVisible=false">取 消</el-button>
+                    <el-button type="primary" @click="jidiUpdateNext()">更 新</el-button>
+                </div>
+            </el-dialog>
+
+        </div>
+<!--        相册 储存需要的图片素材-->
+        <div class="tagbox">
+            <el-upload
+            action="/upload/image/xiangce"
+            list-type="picture-card"
+            :on-preview="handlePictureCardPreview4"
+            :on-remove="handleRemove4"
+            :on-success="uploadSuccess4"
+            style="margin: 20px">
+            <i class="el-icon-plus"></i>
+            </el-upload>
+            <el-dialog :visible.sync="dialogVisible4">
+                <img width="100%" :src="dialogImageUrl4" alt="">
+            </el-dialog>
+
+            <hr style="height: 5px;background-color: darkgray"/>
+
+            <div v-for="xiangce in xiangces" class="zhanshituItem">
+                <img v-bind:src="xiangce" width="200px" height="120px" style="display: block;margin: 19.5px;border-radius: 10px"/>
+                <el-button type="danger" icon="el-icon-delete" circle style="margin-top: -8px;margin-left: 90px;margin-bottom: 5px" @click="deleteImage(xiangce)"></el-button>
+            </div>
+        </div>
+<!--        商品信息（小程序用）-->
+        <div class="tagbox">
+        <!--  新建商品  -->
+            <div style="display: inline-block;width: 180px;height: auto;vertical-align: top">
+                <el-upload
+                        action="/upload/image/yanxuekecheng"
+                        list-type="picture-card"
+                        :on-preview="handlePictureCardPreview5"
+                        :on-remove="handleRemove5"
+                        :on-success="uploadSuccess5"
+                        style="margin: 20px">
+                    <i class="el-icon-plus"></i>
+                </el-upload>
+                <el-dialog :visible.sync="dialogVisible5">
+                    <img width="100%" :src="dialogImageUrl5" alt="">
+                </el-dialog>
+            </div>
+            <div style="display: inline-block;width: 500px;height: auto">
+                <el-form ref="form" :model="shangpin" label-width="80px">
+                    <el-form-item label="商品名称">
+                        <el-input v-model="shangpin.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="价格">
+                        <el-input v-model="shangpin.price" aria-placeholder="请输入纯数字"></el-input>
+                    </el-form-item>
+                    <el-form-item label="商品描述">
+                        <el-input v-model="shangpin.description"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="shangpinUpoad()">立即创建</el-button>
+                        <el-button>取消</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <hr style="height: 5px;background-color: darkgray"/>
+        <!--   展示、修改已有商品 -->
+            <div class="yanxuekechengItem" v-for="shangpinItem in shangpins">
+                <img v-bind:src="shangpinItem.iconurl" alt="暂无图片">
+                <div style="width: 700px;height: 100%;position: absolute;left: 360px">
+                    <h3 style="text-align: center;display: block">{{shangpinItem.name}}</h3>
+                    <p style="text-align: left;display: block">{{shangpinItem.description}}</p>
+                    <p style="text-align: right;display: block">价格:{{shangpinItem.price}}</p>
+                    <div style="position: absolute;bottom: 20px;right: 20px">
+                        <el-button type="danger" @click="shangpinDelete(shangpinItem.id)">删除</el-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</body>
+
+<script>
+    new Vue({
+        el : "#app",
+        mounted(){
+            this.handleSelect(this.activeIndex);
+        },
+        methods:{
+            //根据标签变化页面
+            handleSelect(key) {
+                this.activeIndex=key;
+                //根据key显示不同页面
+                var tagBoxs = document.querySelector(".container").querySelectorAll(".tagbox");
+                for(var i = 0; i < tagBoxs.length; i++){
+                    tagBoxs[i].style.display = "none";
+                }
+                tagBoxs[key-1].style.display = "block";
+                switch (key) {
+                    case "1" : this.zhanshituLoad(); break;
+                    case "2" : this.yanxuekechengLoad(); break;
+                    case "3" : this.xueyuanLoad(); break;
+                    case "4" : this.jidiLoad(); break;
+                    case "5" : this.xiangceLoad(); break;
+                    case "6" : this.shangpinLoad(); break;
+                }
+            },
+            //每个页面加载数据
+            zhanshituLoad(){
+                axios.get("/images/swipers").then((resp)=>{
+                    this.swipers=resp.data;
+                })
+            },
+            yanxuekechengLoad(){
+                axios.get("/yanxuekecheng").then((resp)=>{
+                    this.yanxuekechengs=resp.data;
+                })
+            },
+            //以json格式提交研学课程的数据
+            yanxuekechengUpoad(){
+                axios({
+                    method: "post",
+                    url : "/yanxuekecheng",
+                    data : this.yanxuekecheng,
+                }).then((resp)=>{
+                    if (resp.data===1) {
+                        this.$message('添加成功');
+                    }else {
+                        this.$message('添加失败');
+                    }
+                });
+            },
+            xiangceLoad(){
+                axios.get('/images/xiangce').then((resp)=>{
+                    this.xiangces = resp.data;
+                })
+            },
+            //删除指定的研学课程
+            yanxuekechengDelete(deleteid){
+                axios({
+                    method: "delete",
+                    url : "/yanxuekecheng/"+deleteid,
+                }).then((resp)=>{
+                    if (resp.data===1) {
+                        this.$message('删除成功');
+                        this.yanxuekechengLoad();
+                    }else {
+                        this.$message('删除失败');
+                    }
+                });
+            },
+            xueyuanLoad(){
+                axios.get("/user").then((resp)=>{
+                    this.users = resp.data;
+                })
+            },
+            jidiLoad(){
+                axios.get("/jidi").then((resp)=>{
+                    this.jidis = resp.data;
+                })
+            },
+            shangpinLoad(){
+            //    得到商品数据
+                axios.get("/shangpin").then((resp) => {
+                    this.shangpins = resp.data;
+                })
+            },
+            shangpinUpoad(){
+                axios({
+                    method:"post",
+                    url:"/shangpin",
+                    data:this.shangpin
+                }).then((resp)=>{
+                    if (resp.data === 1) {
+                        this.$message('添加成功');
+                        this.shangpinLoad();
+                    }else {
+                        this.$message('添加失败');
+                    }
+                });
+            },
+            shangpinDelete(id){
+                axios({
+                    method:"delete",
+                    url:"/shangpin/"+id,
+                }).then((resp)=>{
+                   if(resp.data === 1){
+                       this.$message('删除成功');
+                   }
+                });
+            },
+            //删除image方法
+            deleteImage(url){
+                axios({
+                    method:"delete",
+                    url:"/images/delete",
+                    data:url
+                }).then((resp)=>{
+                    if (resp.data===1) {
+                        this.$message('删除成功');
+                        //页面刷新
+                        this.handleSelect(this.activeIndex);
+                    }else {
+                        this.$message('删除失败');
+                    }
+                })
+            },
+            //删除单个用户
+            deleteRow(user){
+                var id = user.id;
+                axios({
+                    method:"delete",
+                    url:"/user/"+id,
+                }).then((resp)=>{
+                    if (resp.data===1) {
+                        this.$message("删除成功");
+                        this.xueyuanLoad();
+                    }
+                });
+            },
+            //新建基地
+            savejidi(){
+                axios({
+                    method:"post",
+                    url : "/jidi",
+                    data : this.newjidi
+                }).then((resp)=>{
+                    if (resp.data === 1) {
+                        this.$message("创建成功");
+                        this.notsavejidi();
+                    }
+                });
+            },
+            notsavejidi(){
+                this.newjidiDialogVisible = false;
+                //重置newjidi数据
+                this.newjidi = {
+                    jidiName:'',
+                    description : ''
+                };
+            },
+            //编辑 更新基地内容
+            jidiUpdte(row){
+                //先给jidi变量赋值
+                this.jidi.id = row.id;
+                this.jidi.jidiName = row.jidiName;
+                this.jidi.description = row.description;
+                axios.get("/images/"+this.jidi.id).then((resp)=>{
+                    this.jidiImages = resp.data;
+                    // console.log(this.jidiImages);
+                })
+                //打开编辑dialog
+                this.updatejidiDialogVisible = true;
+            },
+            //由用户在dialog上决定是否执行更新
+            jidiUpdateNext(){
+                //更新基地的文本描述
+                axios({
+                    method:"put",
+                    url : "/jidi",
+                    data : this.jidi
+                }).then((resp)=>{
+                });
+                //更新基地对应图片
+                for (let i = 0; i < this.jidiImagesDeleted.length; i++) {
+                    axios({
+                        method:"delete",
+                        url : "/images/delete",
+                        data : this.jidiImagesDeleted[i]
+                    }).then((resp)=>{
+                        if(resp.data === 0){
+                            this.$message("删除失败");
+                        }
+                    });
+                }
+                //刷新页面数据
+                this.jidiLoad();
+                //关闭dialog
+                this.updatejidiDialogVisible = false;
+            },
+            deletejidiImage(jidiImage){
+                var number = this.jidiImagesDeleted.indexOf(jidiImage);
+                if(number === -1) {
+                    this.jidiImagesDeleted.push(jidiImage);
+                }else {
+                    this.jidiImagesDeleted.splice(number,1);
+                }
+                console.log(this.jidiImagesDeleted);
+            },
+            //删除基地
+            jidiRemove(row){
+                this.$confirm('此操作将永久删除该目标, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    //确认删除该数据
+                    var id = row.id;
+                    var jidiName = row.jidiName;
+                    axios({
+                        method:"delete",
+                        url:"/jidi/"+id+"/"+jidiName,
+                    }).then((resp)=>{
+                        if (resp.data===1) {
+                            this.$message("删除成功");
+                            this.jidiLoad();
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                })
+            },
+//---------------------element------------------------------------------------
+            handleRemove(file, fileList) {
+                this.deleteImage(file.response);
+            },
+            handlePictureCardPreview(file) {
+                this.dialogImageUrl = file.url;
+                this.dialogVisible = true;
+            },
+            uploadSuccess(response, file, fileList){
+                this.$message('上传成功，请刷新页面');
+                this.zhanshituLoad();
+            },
+            handleRemove2(file, fileList) {
+                this.deleteImage(file.response);
+            },
+            handlePictureCardPreview2(file) {
+                this.dialogImageUrl2 = file.url;
+                this.dialogVisible2 = true;
+            },
+            uploadSuccess2(response, file, fileList){
+                this.yanxuekecheng.iconurl=file.response;
+                this.$message('上传多张图片时以最后一张为准');
+            },
+            handleRemove3(file, fileList) {
+                this.deleteImage(file.response);
+                this.jidiImagesDeleted.splice(this.jidiImagesDeleted.indexOf(file.response),1);
+            },
+            handlePictureCardPreview3(file) {
+                this.dialogImageUrl2 = file.url;
+                this.dialogVisible2 = true;
+            },
+            uploadSuccess3(response, file, fileList){
+                this.$message('上传成功');
+            },
+            handleRemove4(file, fileList) {
+                this.deleteImage(file.response);
+            },
+            handlePictureCardPreview4(file) {
+                this.dialogImageUrl4 = file.url;
+                this.dialogVisible4 = true;
+            },
+            uploadSuccess4(response, file, fileList){
+                this.$message('上传成功');
+                this.xaingceLoad();
+            },
+            handleRemove5(file, fileList) {
+                this.deleteImage(file.response);
+            },
+            handlePictureCardPreview5(file) {
+                this.dialogImageUrl5 = file.url;
+                this.dialogVisible5 = true;
+            },
+            uploadSuccess5(response, file, fileList) {
+                this.shangpin.iconurl = file.response;
+                this.$message('上传多张图片时以最后一张为准');
+            }
+        },
+        data() {
+            return{
+                activeIndex: '1',
+            //    所有展示图数据   组别+url
+                swipers:[
+
+                ],
+                //研学课程列表数据
+                yanxuekechengs: [
+                    {
+                        id:'',
+                        name:'',
+                        price:'',
+                        description:'',
+                        iconurl:'',
+                    }
+                ],
+                //单个课程
+                yanxuekecheng:{
+                    id:'',
+                    name:'',
+                    price:'',
+                    description:'',
+                    iconurl:'',
+                },
+                //学员管理列表
+                users:[
+                    {
+                        id:'',
+                        gender:'',
+                        username:'',
+                        description:'',
+                        iconurl:'',
+                        password:'',
+                    },
+                ],
+                //表示单个学员
+                user:{
+                   id:'',
+                   gender:'',   //记得做个男女选择框 转换成数字
+                   username:'',
+                   description:'',
+                   password:'',
+                },
+                //全部基地
+                jidis:[
+                    {
+                        id: '',
+                        jidiName:'',
+                        description : ''
+                    },
+                ],
+                //单个基地
+                jidi:{
+                    id: '',
+                    jidiName:'',
+                    description : ''
+                },
+                jidiImages:[
+                    
+                ],
+                jidiImagesDeleted:[
+
+                ],
+                newjidi:{
+                    id: '',
+                    jidiName:'',
+                    description : ''
+                },
+                xiangces:[
+
+                ],
+                shangpins:[
+                    {
+                        id: "",
+                        name: "",
+                        price: "",
+                        description: "",
+                        iconurl: ""
+                    }
+                ],
+                shangpin:{
+                    id: "",
+                    name: "",
+                    price: "",
+                    description: "",
+                    iconurl: ""
+                },
+//---------------------element------------------------------------------------
+                dialogImageUrl: '',
+                dialogVisible: false,
+                dialogImageUrl2: '',
+                dialogVisible2: false,
+                dialogImageUrl3: '',
+                dialogVisible3: false,
+                dialogImageUrl4: '',
+                dialogVisible4: false,
+                dialogImageUrl5: '',
+                dialogVisible5: false,
+                newjidiDialogVisible: false,
+                updatejidiDialogVisible: false
+            }
+        }
+
+    })
+    function sleep(time) {
+        var timeStamp = new Date().getTime();
+        var endTime = timeStamp + time;
+        while (true) {
+            if (new Date().getTime() > endTime) {
+                return;
+            }
+        }
+    }
+</script>
+</html>

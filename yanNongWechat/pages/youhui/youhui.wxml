@@ -1,0 +1,15 @@
+
+<view>
+    <view class="item" wx:for="{{shangpins}}" wx:key="index">
+        <image src="https://zzjava.top/{{item.iconurl}}" mode="widthFix"></image>
+        <view style="padding: 15rpx;padding-top: 5rpx;">
+            <view style="font-size: 1.5em;">
+                <text style="font-size: 0.7em;">￥</text>
+                <text style="text-decoration: line-through;">{{item.price}}</text>
+                <text style="font-size: 0.7em;"> ￥</text>
+                <text>{{item.price*0.9}}</text>
+            </view>
+            <text>{{item.name}}</text>
+        </view>
+    </view>
+</view>

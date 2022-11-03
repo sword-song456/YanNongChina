@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--全部动态获取-->
+<head>
+    <script src="../js/vue.js"></script>
+    <script src="../js/axios-0.18.0.js"></script>
+    <script src="../element-ui/lib/index.js"></script>
+    <script src="../js/common.js"></script>
+    <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="icon" href="../configImage/favicon.png">
+    <meta charset="UTF-8">
+    <title>基地展示</title>
+    <style>
+        p{
+            word-break: break-all;
+        }
+        .topbox{
+            float: top;
+            width: 100%;
+            height: 226px;
+            text-align: center;
+            font-size: 35px;
+            color: #fff;
+            margin: auto;
+            background: url(https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.vjshi.com%2F2017-11-17%2F64bdb2a09a404add405e7d05680ba6ee%2F00004.jpg%3Fx-oss-process%3Dstyle%2Fwatermark&amp;refer=http%3A%2F%2Fpic.vjshi.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659348017&amp;t=d97ed4a5f6dc3656569064e4d59c83eb) top center repeat;
+            z-index: -999;
+        }
+        .motherbox{
+            margin: 0 auto;
+            width: 70%;
+            height: auto;
+            background-color: white;
+            margin-top: -55px;
+            padding: 30px;
+        }
+        /*.motherbox div{*/
+        /*    display: inline-block;*/
+        /*}*/
+        .el-carousel__item h3 {
+            color: #475669;
+            font-size: 14px;
+            opacity: 0.75;
+            line-height: 150px;
+            margin: 0;
+        }
+        .el-carousel__item:nth-child(2n) {
+            background-color: #99a9bf;
+        }
+
+        .el-carousel__item:nth-child(2n+1) {
+            background-color: #d3dce6;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div style="position:fixed;left:0;top:0;width:100%;height:60px;box-shadow:0 10px 10px 0 rgba(0,0,0,.05);background-color:#FFFFFF;z-index: 5" class="top">
+        <!--        小图标-->
+        <img src="../configImage/subicon.png" style="height: 100%;float: left">
+        <!--   靠右 小程序入口（二维码）、我的课程、登录/注册-->
+        <div style="float: right;">
+            <a class="item" id="xiaochengxu" href="#" style="vertical-align: top">
+                <img src="../configImage/xiaochengxu.png">
+                <p>小程序</p>
+                <div style="float: bottom;background-color: white">
+                    <img src="../configImage/xiaochengxu.png">
+                </div>
+            </a>
+            <!--        <a class="item" href="#">-->
+            <!--            <img src="../configImage/wodekecheng.png">-->
+            <!--            <p>课程</p>-->
+            <!--        </a>-->
+            <a v-if="user.iconurl===''" class="item" href="#" @click="loginDialog = true">
+                <img src="../configImage/weidenglu.png">
+                <p>登录</p>
+            </a>
+            <a v-else class="item" :href="'/userDetail/'+user.id">
+                <img :src="user.iconurl">
+                <p>{{user.username}}</p>
+            </a>
+        </div>
+    </div>
+
+    <div class="topbox">
+        <p style="color: white;margin:0 auto;line-height: 240px;font-size: 40px">{{jidi.jidiName}}</p>
+    </div>
+    <div class="motherbox">
+        <div style="margin: 0 auto;width: 80%;background: none">
+            <template>
+                <el-carousel :interval="4000" height="450px" style="">
+                    <el-carousel-item v-for="url in imageUrls">
+                        <img v-bind:src="url" width="100%" height="100%"/>
+                    </el-carousel-item>
+                </el-carousel>
+            </template>
+        </div>
+        <el-divider></el-divider>
+        <div style="border-left: red 6px solid;margin-bottom: 20px"><h3 style="line-height: 2">&nbsp;基地简介</h3></div>
+        <div>
+            <p style="text-indent: 2em">{{jidi.description}}</p>
+        </div>
+    </div>
+</div>
+<script>
+    var strings = location.href.split("/");
+    var jidiId = strings[strings.length - 1];
+    new Vue({
+        el : "#app",
+        mounted(){
+          axios.get("/jidi/"+jidiId).then((resp)=>{
+              this.jidi=resp.data;
+          });
+          axios.get("/images/"+jidiId).then((resp)=>{
+              this.imageUrls=resp.data;
+          });
+        },
+        methods:{
+
+        },
+        data() {
+            return{
+                jidi:{
+                    id: '',
+                    jidiName:'',
+                    description : ''
+                },
+                imageUrls:[
+
+                ],
+                user:{
+                    id:'',
+                    gender:'',
+                    username:'',
+                    description:'',
+                    iconurl: '',
+                    password:'',
+                },
+                userLogin:{
+
+                },
+            }
+        }
+    });
+</script>
+</body>
+</html>

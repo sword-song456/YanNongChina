@@ -1,0 +1,48 @@
+{
+  "pages": [
+    "pages/main/main",
+    "pages/yanxuechengzhang/yanxuechengzhang",
+    "pages/wode/wode",
+    "pages/yanxuekechengDetail/yanxuekechengDetail",
+    "pages/jidiDetali/jidiDetail",
+    "pages/yanxuekecheng/yanxuekecheng",
+    "pages/jidi/jidi",
+    "pages/shangpin/shangpin",
+    "pages/youhui/youhui",
+    "pages/AI/AI",
+    "pages/VR/VR",
+    "pages/xueyuan/xueyuan",
+    "pages/huigu/huigu"
+    
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#FF4040",
+    "navigationBarTitleText": "童引三晋行未来",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/main/main",
+        "text": "首页",
+        "iconPath": "icon/home.png",
+        "selectedIconPath": "icon/home-fill.png"
+      },
+      {
+        "pagePath": "pages/yanxuechengzhang/yanxuechengzhang",
+        "text": "研学成长",
+        "iconPath": "icon/yanxuechengzhang.png",
+        "selectedIconPath": "icon/yanxuechengzhang-fill.png"
+      },
+      {
+        "pagePath": "pages/wode/wode",
+        "text": "我的",
+        "iconPath": "icon/wode.png",
+        "selectedIconPath": "icon/wode-fill.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

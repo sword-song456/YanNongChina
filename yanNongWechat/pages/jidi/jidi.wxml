@@ -1,0 +1,11 @@
+<!--pages/jidi/jidi.wxml-->
+<view class="motherBox">
+  <navigator class="item" wx:for="{{jidis}}" wx:key="index" url="/pages/jidiDetali/jidiDetail?id={{item.id}}">
+    <view>
+      <image class="jidiImg" src="https://www.yannongcn.link/{{jidiImages[index]}}"></image>
+    </view>
+    <view class="textbox">
+      <text>{{item.jidiName}}</text>
+    </view>
+  </navigator>
+</view>
